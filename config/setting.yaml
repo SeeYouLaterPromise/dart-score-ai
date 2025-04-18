@@ -1,0 +1,24 @@
+# 模型路径配置
+model:
+  weights: "model/model_weights/yolov5_best.pt"
+  input_size: 800
+  conf_threshold: 0.5
+
+# 图像路径配置
+images:
+  test_folder: "data/images/"
+  save_folder: "data/results/"
+
+# 参考点在标准飞镖盘中的位置（单位圆坐标）
+board_points:
+  - [0.5, 0.05]   # 5&20 分区交点
+  - [0.95, 0.5]   # 17&3
+  - [0.5, 0.95]   # 8&11
+  - [0.05, 0.5]   # 13&6
+
+# 半径设定（单位圆）
+circle_radius:
+  inner_bull: 0.03
+  outer_bull: 0.07
+  triple_ring: [0.53, 0.60]
+  double_ring: [0.93, 1.00]
