@@ -1,0 +1,11 @@
+data # 数据集不上传
+# 避免再次误提交子仓库信息（如果 .git 没删干净）
+model/yolov5/.git/
+
+# Python 全局缓存
+*.pyc
+__pycache__/
+
+# VSCode/PyCharm 配置文件
+.vscode/
+.idea/
