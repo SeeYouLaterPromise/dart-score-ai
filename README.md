@@ -1,5 +1,5 @@
 # Dart score system
-Objective: (video -> image -> points -> score) 分析飞镖扎在飞盘上的得分
+Objective: (video -> images -> coordinates_points -> score) 分析飞镖扎在飞盘上的得分
 
 # Task Allocation
 - 模型工程师 (Yexin Liu Lu)（处理视觉模型，输入：静态图片；输出：飞镖坐标点列表）
@@ -16,16 +16,29 @@ Objective: (video -> image -> points -> score) 分析飞镖扎在飞盘上的得
 ## config
 `.yaml` for parameter configuration.
 
+## data
+`dataset_address.txt` or `chaoxing` to download the dataset
+You should arrange your `data` directory like this:
+- `darts_dataset`
+- `yolo_dataset` (future, you convert `darts_dataset`and preserve here)
+
 ## report
-write your work record or though here. 
+write your work records or thoughts here. 
 
-# Model
-## Yolov5
-首先，你需要运行 `conver_label.py`：
-- 将数据集(`data/darts_dataset`)标签形式转换成YOLO标准
-- 划分训练集和验证集
-- 文件存储：`data/yolo_dataset`
+## model
+### Collaborators should read:
+* 首先，你需要运行 `model/conver_label.py`：
+    - 将数据集(`data/darts_dataset`)标签形式转换成YOLO标准，并放在`data/yolo_dataset`
+    - 划分训练集和验证集
+    - 文件存储：`data/yolo_dataset`
+* `model/predict_darts.py`中的`predict_image`
+  - input: 图片
+  - output: 
+    1. xy: 形如[[], [], [], [], ...]
+    前四个是参考点的xy坐标；后面剩下的是飞镖点的xy坐标。
+    2. img0: original image
 
+### Yolov5
 运行`yolov5`训练:
 ```
 cd model/yolov5
@@ -35,4 +48,13 @@ cd ..
 python model/yolov5/train.py --img 800 --batch 16 --epochs 100 --data config/yolo_data.yaml --weights "" --project runs_dart --name yolo-first-try
 ```
 
-模型训练后的实验结果保存在`runs_dart`文件夹下。
+模型训练后的实验结果会保存在`runs_dart`文件夹下（由`--project`指定）。
+
+
+
+
+## geometry
+...
+
+## system
+...

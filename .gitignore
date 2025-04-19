@@ -1,4 +1,7 @@
-data # 数据集不上传
+# 数据集不上传
+data/darts_dataset
+data/yolo_dataset
+
 # 避免再次误提交子仓库信息（如果 .git 没删干净）
 model/yolov5/.git/
 
