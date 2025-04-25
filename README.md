@@ -54,7 +54,20 @@ python model/yolov5/train.py --img 800 --batch 16 --epochs 100 --data config/yol
 
 
 ## geometry
-...
-
+`geometry/dart_scoring`文件实现了两个函数：
+* `calculate_dart_scores`: 计算飞镖得分
+  - input
+    - **calibration_points**: 4个校准点坐标列表，格式为 `[[x1, y1], [x2, y2], [x3, y3], [x4, y4]]`
+    - **dart_points**: 飞镖坐标列表，格式为 `[[x, y], ...]`
+  - output
+    - **results**: 每个飞镖的得分列表，格式为 `[{'score': 分数, 'details': 描述}, ...]`
+    - **total_score**: 总得分
+* `label_dart_scores`: 在飞镖盘图片上标记飞镖得分
+  - input
+    - **image**: numpy数组，飞镖盘图片 (800x800x3)
+    - **dart_points**: 飞镖坐标列表，格式为 `[[x, y], ...]`，归一化坐标
+    - **scores**: 得分列表，格式为 `[{'score': 分数, 'details': 描述}, ...]`
+  - output
+    - **labeled_image**: 标记了得分的numpy图片
 ## system
 ...
