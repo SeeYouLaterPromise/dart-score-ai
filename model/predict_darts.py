@@ -4,6 +4,17 @@ import cv2
 import numpy as np
 from pathlib import Path
 
+import platform
+os_type = platform.system()
+print("Operating System:", os_type)
+# If you have linux (or deploying for linux) use:
+if os_type == 'Linux':
+    from pathlib import Path
+    import pathlib
+    temp = pathlib.PosixPath
+    pathlib.WindowsPath = pathlib.PosixPath
+
+
 # === 设置路径 ===
 FILE = Path(__file__).resolve()
 PROJECT_ROOT = FILE.parents[1]
@@ -13,9 +24,9 @@ sys.path.insert(0, str(YOLOV5_ROOT))  # 把 yolov5 路径放在最前面！
 
 
 # ✅ 使用 yolov5.xxx 模块路径
-from yolov5.models.common import DetectMultiBackend
-from yolov5.utils.general import non_max_suppression, scale_boxes
-from yolov5.utils.augmentations import letterbox
+from model.yolov5.models.common import DetectMultiBackend
+from model.yolov5.utils.general import non_max_suppression, scale_boxes
+from model.yolov5.utils.augmentations import letterbox
 
 # === 参数配置 ===
 print(FILE.parents[0])
