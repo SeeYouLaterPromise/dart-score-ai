@@ -20,6 +20,7 @@ img_path = f"./data/darts_dataset/800/{row['img_folder']}/{row['img_name']}"
 img = cv2.imread(img_path)
 
 for i, (x, y) in enumerate(row['xy']):
+    print(x, y)
     px, py = int(x * 800), int(y * 800)
     # for reference point, color it green.
     # for dart point, color it blue.
