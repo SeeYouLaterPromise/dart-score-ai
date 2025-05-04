@@ -70,4 +70,22 @@ python model/yolov5/train.py --img 800 --batch 16 --epochs 100 --data config/yol
   - output
     - **labeled_image**: 标记了得分的numpy图片
 ## system
-...
+
+`evaluate_dart_image.py`模块提供飞镖评分系统的核心交互功能，支持摄像头实时评估与单图处理两种模式。
+
+### `evaluate_dart_camera()` 
+- **实时摄像头模式**  
+  通过摄像头实时捕获画面，按需分析飞镖得分
+- 快捷键：
+  - `n`：捕获当前帧进行评分
+  - `q`：退出程序
+- 支持自定义模型路径
+
+### `evaluate_dart_image()` 
+- **单图处理模式**  
+  输入图片路径，返回标记得分后的图像及详细结果
+- 参数说明：
+  ```python
+  img_path: str          # 必选，输入图片路径
+  model_path: str = None # 可选，自定义模型路径
+  show_steps: bool = False # 是否显示处理中间步骤
