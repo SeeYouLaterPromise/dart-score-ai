@@ -15,30 +15,32 @@ def evaluate_dart_camera(model_path=None, show_steps=False):
         print("无法打开摄像头")
         return
 
+    print("按 'n' 键保存当前帧并识别，按 'q' 键退出程序")
+
     while True:
-        ret, frame = cap.read()
-        if not ret:
-            print("无法读取帧")
-            break
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord('n'):  # 按下 n 键拍照
+            ret, frame = cap.read()
+            if not ret:
+                print("无法读取帧")
+                break
 
-        start_time = time.time()
+            start_time = time.time()
+            now = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"frame_{now}.jpg"
+            cv2.imwrite(filename, frame)
 
-        try:
-            # 运行完整的处理流程
-            scores, total, labeled_img = evaluate_dart_image(None, model_path=model_path, show_steps=False)
-        except Exception as e:
-            print(f"处理帧时出错: {e}")
-            labeled_img = frame.copy()
-            cv2.putText(labeled_img, "处理中...", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            try:
+                # 运行完整的处理流程
+                scores, total, labeled_img = evaluate_dart_image(filename, model_path=model_path, show_steps=False)
+                duration = time.time() - start_time
+                fps = 1 / duration if duration > 0 else 0
+                print(f"得分: {scores}, 总得分: {total}")
+                print(f"处理帧耗时: {duration:.3f}秒, FPS: {fps:.2f}")
+            except Exception as e:
+                print(f"处理帧时出错: {e}")
 
-        # 显示处理后的帧
-        cv2.imshow('实时飞镖得分识别', labeled_img)
-
-        duration = time.time() - start_time
-        fps = 1 / duration if duration > 0 else 0
-        print(f"处理帧耗时: {duration:.3f}秒, FPS: {fps:.2f}")
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        elif key == ord('q'):  # 按下 q 键退出
             break
 
     cap.release()
