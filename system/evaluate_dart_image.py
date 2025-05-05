@@ -1,10 +1,9 @@
 import cv2
 import time
-from datetime import datetime
 from model.predict_darts import predict_image, visualize
 from geometry.dart_scoring import calculate_dart_scores, label_dart_scores
 
-def evaluate_dart_camera(model_path=None, show_steps=False):
+def evaluate_dart_camera():
     """
     使用摄像头实时评估飞镖得分
     参数:
@@ -26,11 +25,11 @@ def evaluate_dart_camera(model_path=None, show_steps=False):
 
         try:
             # 运行完整的处理流程
-            scores, total, labeled_img = evaluate_dart_image(frame, model_path=model_path, show_steps=False)
+            scores, total, labeled_img = evaluate_dart_image(frame)
         except Exception as e:
             print(f"处理帧时出错: {e}")
             labeled_img = frame.copy()
-            cv2.putText(labeled_img, "处理中...", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            cv2.putText(labeled_img, "processing...", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
         # 显示处理后的帧
         cv2.imshow('实时飞镖得分识别', labeled_img)
@@ -86,7 +85,6 @@ def evaluate_dart_image(image, show_steps=False):
 
     return scores, total_score, labeled_image
 
-# 示例使用
 def example():
     # 测试案例（需替换实际路径）
     img_path = "../data/darts_dataset/800/d1_02_04_2020/IMG_1082.JPG"
@@ -107,5 +105,6 @@ def example():
 
     cv2.imwrite("result_labeled.jpg", labeled_img)
 
+# 示例使用
 if __name__ == "__main__":
     evaluate_dart_camera()
