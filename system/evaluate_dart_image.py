@@ -1,5 +1,6 @@
 import cv2
 import time
+from datetime import datetime
 from model.predict_darts import predict_image, visualize
 from geometry.dart_scoring import calculate_dart_scores, label_dart_scores
 
@@ -15,38 +16,36 @@ def evaluate_dart_camera(model_path=None, show_steps=False):
         print("无法打开摄像头")
         return
 
-    print("按 'n' 键保存当前帧并识别，按 'q' 键退出程序")
-
     while True:
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord('n'):  # 按下 n 键拍照
-            ret, frame = cap.read()
-            if not ret:
-                print("无法读取帧")
-                break
+        ret, frame = cap.read()
+        if not ret:
+            print("无法读取帧")
+            break
 
-            start_time = time.time()
-            now = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"frame_{now}.jpg"
-            cv2.imwrite(filename, frame)
+        start_time = time.time()
 
-            try:
-                # 运行完整的处理流程
-                scores, total, labeled_img = evaluate_dart_image(filename, model_path=model_path, show_steps=False)
-                duration = time.time() - start_time
-                fps = 1 / duration if duration > 0 else 0
-                print(f"得分: {scores}, 总得分: {total}")
-                print(f"处理帧耗时: {duration:.3f}秒, FPS: {fps:.2f}")
-            except Exception as e:
-                print(f"处理帧时出错: {e}")
+        try:
+            # 运行完整的处理流程
+            scores, total, labeled_img = evaluate_dart_image(frame, model_path=model_path, show_steps=False)
+        except Exception as e:
+            print(f"处理帧时出错: {e}")
+            labeled_img = frame.copy()
+            cv2.putText(labeled_img, "处理中...", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-        elif key == ord('q'):  # 按下 q 键退出
+        # 显示处理后的帧
+        cv2.imshow('实时飞镖得分识别', labeled_img)
+
+        duration = time.time() - start_time
+        fps = 1 / duration if duration > 0 else 0
+        print(f"处理帧耗时: {duration:.3f}秒, FPS: {fps:.2f}")
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
     cap.release()
     cv2.destroyAllWindows()
 
-def evaluate_dart_image(img_path, show_steps=False):
+def evaluate_dart_image(image, show_steps=False):
     """
     输入图片路径，返回得分结果和标记后的图片
     参数:
@@ -59,9 +58,9 @@ def evaluate_dart_image(img_path, show_steps=False):
         labeled_image: 标记后的图片（numpy数组）
     """
     # 1. 读取图片并进行预测
-    image = cv2.imread(img_path)
-    if image is None:
-        raise FileNotFoundError(f"图片未找到：{img_path}")
+    # image = cv2.imread(img_path)
+    # if image is None:
+    #     raise FileNotFoundError(f"图片未找到：{img_path}")
 
     # 2. 预测关键点和飞镖点（传递model_path参数）
     xy, processed_img = predict_image(image)
@@ -88,22 +87,25 @@ def evaluate_dart_image(img_path, show_steps=False):
     return scores, total_score, labeled_image
 
 # 示例使用
-if __name__ == "__main__":
+def example():
     # 测试案例（需替换实际路径）
     img_path = "../data/darts_dataset/800/d1_02_04_2020/IMG_1082.JPG"
-    
+
     # 使用方式1：默认模型路径
     # scores, total, labeled_img = evaluate_dart_image(img_path, show_steps=True)
-    
+
     # 使用方式2：自定义模型路径
     scores, total, labeled_img = evaluate_dart_image(
         img_path,
         show_steps=True
     )
-    
+
     print("\n得分详情：")
     for i, score in enumerate(scores):
-        print(f"飞镖 {i+1}: {score['details']}")
+        print(f"飞镖 {i + 1}: {score['details']}")
     print(f"总得分: {total}")
-    
+
     cv2.imwrite("result_labeled.jpg", labeled_img)
+
+if __name__ == "__main__":
+    evaluate_dart_camera()
