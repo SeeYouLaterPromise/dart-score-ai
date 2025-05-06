@@ -1,0 +1,54 @@
+import pandas as pd
+import os
+import shutil
+import random
+from tqdm import tqdm
+
+DATA_DIR = os.path.join("..", "data")
+
+# 参数设置
+pkl_path = os.path.join(DATA_DIR, "darts_dataset", "labels.pkl")
+image_root = os.path.join(DATA_DIR, "darts_dataset", "800")
+output_root = os.path.join(DATA_DIR, "yolo_dataset")
+
+train_ratio = 0.8
+box_size = 0.05  # YOLO中目标边框大小（归一化宽高）
+
+# 创建目录结构
+for split in ['train', 'val']:
+    os.makedirs(f"{output_root}/images/{split}", exist_ok=True)
+    os.makedirs(f"{output_root}/labels/{split}", exist_ok=True)
+
+# 读取 pkl 并打乱顺序
+df = pd.read_pickle(pkl_path)
+data = list(df.iterrows())
+random.shuffle(data)
+
+train_cut = int(len(data) * train_ratio)
+
+for idx, (i, row) in tqdm(enumerate(data), total=len(data)):
+    img_path = os.path.join(image_root, row["img_folder"], row["img_name"])
+    if not os.path.exists(img_path):
+        print(f"❌ 文件不存在，跳过：{img_path}")
+        continue
+
+    # 坐标合法性检查（全部合法才处理）
+    xy_valid = all(0.0 <= x <= 1.0 and 0.0 <= y <= 1.0 for x, y in row["xy"])
+    if not xy_valid:
+        print(f"⚠️ 非法坐标，跳过该样本：{row['img_name']}  原始坐标 = {row['xy']}")
+        continue
+
+    split = 'train' if idx < train_cut else 'val'
+    out_img_path = os.path.join(output_root, "images", split, f"{i}.jpg")
+    out_lbl_path = os.path.join(output_root, "labels", split, f"{i}.txt")
+
+    # 拷贝图像
+    shutil.copy(img_path, out_img_path)
+
+    # 写入标签
+    with open(out_lbl_path, "w") as f:
+        for j, (x, y) in enumerate(row["xy"]):
+            cls_id = j if j < 4 else 4  # 0~3 为参考点，4 为飞镖
+            f.write(f"{cls_id} {x:.6f} {y:.6f} {box_size} {box_size}\n")
+
+print("\n✅ 标签转换完成，仅保留了坐标合法的样本。")

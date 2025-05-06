@@ -48,6 +48,7 @@ model.warmup(imgsz=(1, 3, IMG_SIZE, IMG_SIZE))  # 预热模型
 def predict_image(image):
     img0 = image.copy()
     img = letterbox(img0, new_shape=IMG_SIZE, stride=stride)[0]
+    cv2.imshow("resized", img)
     img = img.transpose((2, 0, 1))[::-1]  # BGR to RGB, HWC to CHW
     img = np.ascontiguousarray(img)
 
@@ -56,6 +57,7 @@ def predict_image(image):
     img = img.unsqueeze(0)
 
     pred = model(img, augment=False, visualize=False)
+    print(pred)
     pred = non_max_suppression(pred, conf_thres=CONF_THRESHOLD, iou_thres=0.45)
 
     xy = []

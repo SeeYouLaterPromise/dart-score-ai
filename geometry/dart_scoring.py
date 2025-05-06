@@ -17,10 +17,10 @@ def calculate_dart_scores(calibration_points, dart_points):
     # 标准飞镖盘上的校准点（归一化半径1.0，双倍环外沿）
     # 按5&20->17&3->8&11->13&6顺序，角度为9°, 99°, 189°, 279°
     standard_points = np.float32([
-        [math.cos(math.radians(9)), math.sin(math.radians(9))],   # 5&20
-        [math.cos(math.radians(99)), math.sin(math.radians(99))],  # 17&3
-        [math.cos(math.radians(189)), math.sin(math.radians(189))], # 8&11
-        [math.cos(math.radians(279)), math.sin(math.radians(279))]  # 13&6
+        [math.cos(math.radians(351)), math.sin(math.radians(351))],   # 5&20
+        [math.cos(math.radians(171)), math.sin(math.radians(171))],  # 17&3
+        [math.cos(math.radians(261)), math.sin(math.radians(261))], # 8&11
+        [math.cos(math.radians(81)), math.sin(math.radians(81))]  # 13&6
     ])
 
     # 输入校准点
@@ -71,6 +71,9 @@ def calculate_dart_scores(calibration_points, dart_points):
         elif double_ring_inner <= distance <= double_ring_outer:
             score = base_score * 2
             details = f"双倍 {base_score} 区 ({score}分)"
+        elif distance > double_ring_outer:
+            score = 0
+            details = f"脱靶 (0分)"
         else:
             score = base_score
             details = f"单倍 {base_score} 区 ({score}分)"
@@ -112,6 +115,8 @@ def label_dart_scores(image, dart_points, scores):
         details = score['details']
         if "靶心" in details:
             label = "B" if "内靶心" in details else "OB"
+        elif "脱靶" in details:
+            label = "Out"
         else:
             # 提取倍数和基数
             multiplier = "S"
@@ -171,5 +176,5 @@ def example(img_path):
 
 # 示例使用
 if __name__ == "__main__":
-    img_path = "../data/darts_dataset/800/d1_02_04_2020/IMG_1082.JPG"
+    img_path = "../data/darts_dataset/800/d1_03_26_2020/IMG_5843.JPG"
     example(img_path)

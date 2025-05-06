@@ -1,6 +1,15 @@
 # Dart score system
 Objective: (video -> images -> coordinates_points -> score) 分析飞镖扎在飞盘上的得分
 
+# Background
+
+
+国际标准组织（WDF：World Darts Federation）规定：
+
+`“标准飞镖靶的 20 分区域必须位于正上方。”`
+
+1896 年，Brian Gamlin（一位木工）设计了现在这个数字排列方式，目的:让高分区被低分区夹住，惩罚失误，避免“刷分”。
+
 # Task Allocation
 - 模型工程师 (Yexin Liu Lu)（处理视觉模型，输入：静态图片；输出：飞镖坐标点列表）
 - 几何计算员 (Zhengkai Yan)（处理得分逻辑，输入：飞镖坐标点列表；输出：得分列表）
@@ -15,6 +24,9 @@ Objective: (video -> images -> coordinates_points -> score) 分析飞镖扎在�
 
 ## config
 `.yaml` for parameter configuration.
+- `setting.yaml` is used to put `global const variable`.
+- `yolo_data.yaml` configures the data format of yolo dataset.
+- `dart_hyp.yaml` is the configuration file for `data argument`.
 
 ## data
 `dataset_address.txt` or `chaoxing` to download the dataset
@@ -40,7 +52,7 @@ write your work records or thoughts here.
 
 ### Yolov5
 运行`yolov5`训练:
-```
+```commandline
 cd model/yolov5
 pip install -r requirements.txt
 cd ..
@@ -48,8 +60,78 @@ cd ..
 python model/yolov5/train.py --img 800 --batch 16 --epochs 100 --data config/yolo_data.yaml --weights "" --project runs_dart --name yolo-first-try
 ```
 
+1. `--img 640` 的含义
+
+是的，`--img 640` 表示：
+
+> 所有输入图片在训练/验证时会被自动 **resize 到 640×640 分辨率**（保持纵横比或填充）。
+
+ 🔍 为什么要这样做？
+
+YOLOv5 要求输入为固定大小（默认是 640×640），因为：
+
+* 模型的卷积结构需要一致输入尺寸；
+* 加快训练速度（小图像 -> 快）；
+* 减少显存占用；
+* 保持 batch 大小不变。
+
+🔧 如果你设置 `--img 800`，图片会被缩放到 800×800，会显著增加计算量与显存消耗。一般不推荐，除非你目标特别小且贴边。
+
 模型训练后的实验结果会保存在`runs_dart`文件夹下（由`--project`指定）。
 
+### Yolov8
+✅ 不需要 `git clone` YOLOv8 仓库
+> YOLOv8（由 Ultralytics 提供）设计为一个 PyPI 包，你只需要通过 pip install ultralytics 安装它即可，不需要手动克隆仓库，这一点是它相比 YOLOv5 的一大优势。
+
+---
+
+📦 安装后你能直接使用的内容包括：
+
+* 命令行工具：`yolo`
+* 模型权重自动下载（如 yolov8s.pt）
+* 所有训练/验证/推理/导出等操作
+
+---
+
+🚀 例如，下面这些命令都可以直接用：
+
+```bash
+# 查看可用任务
+yolo help
+
+# 训练
+yolo detect train model=yolov8s.pt data=your_dataset.yaml epochs=100 imgsz=640
+
+# 推理
+yolo detect predict model=runs/detect/train/weights/best.pt source=test.jpg
+```
+
+---
+
+🔍 如果你**确实需要源码查看或修改底层代码**（如改网络结构）：
+
+那你可以选择手动 clone：
+
+```bash
+git clone https://github.com/ultralytics/ultralytics.git
+cd ultralytics
+pip install -e .  # 开发模式安装，可调试源码
+```
+
+---
+本任务选择在 COCO 数据集预训练权重 yolov8s.pt 的基础上进行微调训练：
+
+```commandline
+yolo detect train \
+  model=yolov8s.pt \
+  data=config/yolo_data.yaml \
+  epochs=10 \
+  imgsz=640 \
+  batch=16 \
+  cfg=config/dart_hyp.yaml \
+  name=dart-aug-v1 \
+  project=runs_dart
+```
 
 
 
