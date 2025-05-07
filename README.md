@@ -2,8 +2,7 @@
 Objective: (video -> images -> coordinates_points -> score) 分析飞镖扎在飞盘上的得分
 
 # Background
-
-
+![Dart](dart.avif)
 国际标准组织（WDF：World Darts Federation）规定：
 
 `“标准飞镖靶的 20 分区域必须位于正上方。”`
@@ -50,25 +49,26 @@ write your work records or thoughts here.
     前四个是参考点的xy坐标；后面剩下的是飞镖点的xy坐标。
     2. img0: original image
 
+---
+| 特性           | YOLOv5                  | YOLOv8                  |
+|--------------|-------------------------|-------------------------|
+| **仓库维护**     | 官方已停止更新                 | 官方持续维护                  |
+| **API 风格**   | 依赖命令行或 `train.py`       | 统一的 `YOLO()` 接口         |
+| **预训练权重兼容性** | 仅支持 `.pt` 格式的 YOLOv5 权重 | 仅支持 `.pt` 格式的 YOLOv8 权重 |
+
+---
 ### Yolov5
 运行`yolov5`训练:
-```commandline
+(You can use `commandline` or `train_yolo.py` at your will.)
+```bash
 cd model/yolov5
 pip install -r requirements.txt
 cd ..
 cd ..
-python model/yolov5/train.py --img 800 --batch 16 --epochs 100 --data config/yolo_data.yaml --weights "" --project runs_dart --name yolo-first-try
+python model/yolov5/train.py --img 800 --batch 16 --epochs 100 --data config/yolo_data.yaml --weights model/yolov5s.pt --project runs_dart --name yolo-first-try
 ```
 
-1. `--img 640` 的含义
-
-是的，`--img 640` 表示：
-
-> 所有输入图片在训练/验证时会被自动 **resize 到 640×640 分辨率**（保持纵横比或填充）。
-
- 🔍 为什么要这样做？
-
-YOLOv5 要求输入为固定大小（默认是 640×640），因为：
+ 🔍 YOLOv5 要求输入为固定大小（默认是 640×640），因为：
 
 * 模型的卷积结构需要一致输入尺寸；
 * 加快训练速度（小图像 -> 快）；
@@ -121,7 +121,7 @@ pip install -e .  # 开发模式安装，可调试源码
 ---
 本任务选择在 COCO 数据集预训练权重 yolov8s.pt 的基础上进行微调训练：
 
-```commandline
+```bash
 yolo detect train \
   model=yolov8s.pt \
   data=config/yolo_data.yaml \

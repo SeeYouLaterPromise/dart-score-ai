@@ -1,50 +1,38 @@
-## 优化器相关
-#lr0: 0.005          # 初始学习率稍微低一点，更稳健
-#lrf: 0.01
-#momentum: 0.937
-#weight_decay: 0.0005
-#warmup_epochs: 3.0
-#warmup_momentum: 0.8
-#warmup_bias_lr: 0.1
-#
-## Loss 权重
-#box: 0.05
-#cls: 0.5
-#cls_pw: 1.0
-#obj: 1.0
-#obj_pw: 1.0
-#iou_t: 0.2
-#anchor_t: 4.0
-#fl_gamma: 0.0
-#
-## 数据增强部分
-#hsv_h: 0.015        # 色调扰动（保持原值）
-#hsv_s: 0.6          # 饱和度扰动（稍微减弱）
-#hsv_v: 0.4          # 亮度扰动
-#
-#degrees: 5.0        # ✅ 增加轻微旋转，模拟拍摄倾斜
-#translate: 0.05     # 小范围平移，模拟摄像机轻微抖动
-#scale: 0.3          # 缩放略减弱，避免比例变化过大影响识别
-#shear: 1.0          # 少量剪切扰动
-#perspective: 0.001  # ✅ 增加轻微透视变形，适应角度不正拍摄
-#
-#flipud: 0.0         # 垂直翻转不现实，保持禁用
-#fliplr: 0.5         # 水平翻转保留，适合飞镖对称性
-#
-#mosaic: 1.0         # 拼图增强保留
-#mixup: 0.0          # 不使用混合图像，避免小目标模糊
+# 优化器相关
+lr0: 0.005          # 初始学习率稍微低一点，更稳健
+lrf: 0.01
+momentum: 0.937
+weight_decay: 0.0005
+warmup_epochs: 3.0
+warmup_momentum: 0.8
+warmup_bias_lr: 0.1
+
+# Loss 权重
+box: 0.05
+cls: 0.5
+cls_pw: 1.0
+obj: 1.0
+obj_pw: 1.0
+iou_t: 0.2
+anchor_t: 4.0
+fl_gamma: 0.0
+
+# 数据增强部分
+hsv_h: 0.015        # 色调扰动（保持原值）
+hsv_s: 0.6          # 饱和度扰动（稍微减弱）
+hsv_v: 0.4          # 亮度扰动
+
+degrees: 5.0        # ✅ 增加轻微旋转，模拟拍摄倾斜
+translate: 0.05     # 小范围平移，模拟摄像机轻微抖动
+scale: 0.3          # 缩放略减弱，避免比例变化过大影响识别
+shear: 1.0          # 少量剪切扰动
+perspective: 0.001  # ✅ 增加轻微透视变形，适应角度不正拍摄
+
+flipud: 0.0         # 垂直翻转不现实，保持禁用
+fliplr: 0.5         # 水平翻转保留，适合飞镖对称性
+
+mosaic: 1.0         # 拼图增强保留
+mixup: 0.0          # 不使用混合图像，避免小目标模糊
 #copy_paste: 0.0     # segmentation 不适用，禁用
 
 
-hsv_h: 0.015
-hsv_s: 0.6
-hsv_v: 0.4
-degrees: 5.0
-translate: 0.05
-scale: 0.3
-shear: 1.0
-perspective: 0.001
-flipud: 0.0
-fliplr: 0.5
-mosaic: 1.0
-mixup: 0.0

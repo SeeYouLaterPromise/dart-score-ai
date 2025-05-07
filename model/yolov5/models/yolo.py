@@ -3,7 +3,7 @@
 YOLO-specific modules.
 
 Usage:
-    $ python models/yolo.py --cfg yolov5s.yaml
+    $ python models/yolo8.py --cfg yolov5s.yaml
 """
 
 import argparse
