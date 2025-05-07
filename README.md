@@ -3,6 +3,7 @@ Objective: (video -> images -> coordinates_points -> score) 分析飞镖扎在�
 
 # Background
 ![Dart](dart.avif)
+
 国际标准组织（WDF：World Darts Federation）规定：
 
 `“标准飞镖靶的 20 分区域必须位于正上方。”`
@@ -32,9 +33,10 @@ Objective: (video -> images -> coordinates_points -> score) 分析飞镖扎在�
 You should arrange your `data` directory like this:
 - `darts_dataset`
 - `yolo_dataset` (future, you convert `darts_dataset`and preserve here)
+> Certain samples contain negative coordinates, which result in warnings from YOLO. Therefore, we choose to filter out these samples before further training.
 
 ## report
-write your work records or thoughts here. 
+You can write your work records or thoughts here. 
 
 ## model
 ### Collaborators should read:
@@ -65,7 +67,7 @@ cd model/yolov5
 pip install -r requirements.txt
 cd ..
 cd ..
-python model/yolov5/train.py --img 800 --batch 16 --epochs 100 --data config/yolo_data.yaml --weights model/yolov5s.pt --project runs_dart --name yolo-first-try
+python model/yolov5/train.py --img 800 --batch 16 --epochs 100 --data config/yolo_data.yaml --weights model/yolov5s.pt --project runs_dart --name yolov5_first
 ```
 
  🔍 YOLOv5 要求输入为固定大小（默认是 640×640），因为：

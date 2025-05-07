@@ -33,6 +33,6 @@ fliplr: 0.5         # 水平翻转保留，适合飞镖对称性
 
 mosaic: 1.0         # 拼图增强保留
 mixup: 0.0          # 不使用混合图像，避免小目标模糊
-#copy_paste: 0.0     # segmentation 不适用，禁用
+copy_paste: 0.0     # segmentation 不适用，禁用
 
 
