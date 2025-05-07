@@ -100,7 +100,7 @@ YOLOv5 要求输入为固定大小（默认是 640×640），因为：
 yolo help
 
 # 训练
-yolo detect train model=yolov8s.pt data=your_dataset.yaml epochs=100 imgsz=640
+yolo detect train model=yolov8s.pt data=config/yolo_data.yaml epochs=100 imgsz=640
 
 # 推理
 yolo detect predict model=runs/detect/train/weights/best.pt source=test.jpg
