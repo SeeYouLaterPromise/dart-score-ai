@@ -38,6 +38,11 @@ You should arrange your `data` directory like this:
 ## report
 You can write your work records or thoughts here. 
 
+## run_dart
+The training results save in this folder.
+- `yolov5_first`: Based on `yolov5s`, directly training with provided dataset (without filtering).
+- `yolov5_hyp`: Based on `yolov5s`, adding data argument strategy(`config/dart_hyp.yaml`) with data filtering (filter the data containing negative coordinates).
+
 ## model
 ### Collaborators should read:
 * 首先，你需要运行 `model/conver_label.py`：

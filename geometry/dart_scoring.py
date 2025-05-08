@@ -176,5 +176,5 @@ def example(img_path):
 
 # 示例使用
 if __name__ == "__main__":
-    img_path = "../data/darts_dataset/800/d1_03_26_2020/IMG_5843.JPG"
+    img_path = "patched_output2.jpg"
     example(img_path)

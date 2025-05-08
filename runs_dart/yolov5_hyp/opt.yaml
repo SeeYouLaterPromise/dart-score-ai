@@ -52,7 +52,7 @@ optimizer: SGD
 sync_bn: false
 workers: 8
 project: C:\Users\USER\Desktop\DartScore\runs_dart
-name: yolov5_cfg
+name: yolov5_hyp
 exist_ok: false
 quad: false
 cos_lr: false

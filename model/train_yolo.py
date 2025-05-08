@@ -16,7 +16,7 @@ data_path = PROJECT_ROOT / "config" / "yolo_data.yaml"
 project_path = PROJECT_ROOT / "runs_dart"
 cfg_path = PROJECT_ROOT / "config/dart_hyp.yaml"
 
-def train_yolo5(log_name="yolov5_cfg"):
+def train_yolo5(log_name="yolov5_hyp"):
     train.run(
         img=640,
         batch=16,

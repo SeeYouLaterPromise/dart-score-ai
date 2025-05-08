@@ -32,7 +32,7 @@ from model.yolov5.utils.augmentations import letterbox
 print(FILE.parents[0])
 print(FILE.parents[1])
 print(FILE.parents[2])
-MODEL_PATH = PROJECT_ROOT / 'runs_dart' / 'yolov5_first' / 'weights' / 'best.pt'
+MODEL_PATH = PROJECT_ROOT / 'runs_dart' / 'yolov5_hyp' / 'weights' / 'best.pt'
 IMAGE_DIR = PROJECT_ROOT / 'data' / 'yolo_dataset' / 'images' / 'val'
 CONF_THRESHOLD = 0.4
 IMG_SIZE = 800
