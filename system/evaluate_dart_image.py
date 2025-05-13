@@ -1,5 +1,9 @@
 import cv2
 import time
+import sys
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from model.predict_darts import predict_image, visualize
 from geometry.dart_scoring import calculate_dart_scores, label_dart_scores
 

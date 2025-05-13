@@ -3,10 +3,15 @@ import time
 from pathlib import Path
 import numpy as np
 from evaluate_dart_image import evaluate_dart_image
+import sys
+import os
+print(os.path.abspath(os.path.join(os.path.dirname(__file__))))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from model.predict_darts import predict_image, visualize
-import cv2
 
-img_source = mg_source = cv2.imread("result_labeled.jpg")  # 数据集中有“BLADE”字体的图
+THIS_FOLDER_DIR = os.path.abspath(os.path.dirname(__file__))
+
+img_source = cv2.imread(os.path.abspath(os.path.join(THIS_FOLDER_DIR, "result_labeled.jpg")))  # 数据集中有“BLADE”字体的图
 
 def paste_patch_on_dartboard(img_target):
     # 读取图像
