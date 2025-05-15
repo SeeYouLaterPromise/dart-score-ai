@@ -417,7 +417,7 @@ def train(hyp, opt, device, callbacks):
                 if opt.quad:
                     loss *= 4.0
 
-            # Backward
+            # Backward 反向传播
             scaler.scale(loss).backward()
 
             # Optimize - https://pytorch.org/docs/master/notes/amp_examples.html

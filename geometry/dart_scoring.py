@@ -1,7 +1,10 @@
 import numpy as np
 import cv2
 import math
-import model
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from model.predict_darts import predict_image, visualize
 
 def calculate_dart_scores(calibration_points, dart_points):
@@ -176,5 +179,10 @@ def example(img_path):
 
 # 示例使用
 if __name__ == "__main__":
-    img_path = "patched_output2.jpg"
-    example(img_path)
+    img_path = "F:\yexin\Python\py_proj\dart-score-ai\data\d1_02_04_2020\IMG_1093.JPG"
+    gray = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)   # shape: [H, W]
+    rgb = cv2.merge([gray, gray, gray])                 # shape: [H, W, 3]
+    # cv2.imwrite('gray_as_rgb.jpg', rgb)
+    cv2.imshow("niaho", rgb)
+    cv2.waitKey(0)
+    # example(img_path)

@@ -57,7 +57,23 @@ def predict_image(image):
     img = img.unsqueeze(0)
 
     pred = model(img, augment=False, visualize=False)
-    print(pred)
+
+    for i in range(len(pred)):
+        p = pred[i]
+        if type(p) is torch.Tensor:
+            print(f"{i}-index: Tensor type: {p.shape}")
+        elif type(p) is list:
+            print(f"{i}-index: List length: {len(p)}")
+            for c_p in p:
+                print(f"type: {type(c_p)}")
+    # print(f"len(pred): {len(pred)}")
+    # print(f"pred[0].shape: {pred[0].shape}")
+    # print(f"list pred[1]: {len(pred[1])}")
+
+    for i, t in enumerate(pred[1]):
+        print(f"pred[1][{i}] shape: {t.shape}")
+
+
     pred = non_max_suppression(pred, conf_thres=CONF_THRESHOLD, iou_thres=0.45)
 
     xy = []
@@ -103,8 +119,31 @@ def example():
         break
 
 
+def example_pic(img_path):
+    print(f"📷 处理图像：{img_path.name}")
+    image = cv2.imread(str(img_path))
+    xy, img = predict_image(image)
+
+    cv2.imshow("original", img)
+    cv2.waitKey(0)
+
+    print("预测点坐标：")
+    for i, pt in enumerate(xy):
+        print(f"  Point {i+1}: {pt}")
+    vis = visualize(img.copy(), xy)
+    cv2.imshow("annotate", vis)
+    cv2.waitKey(0)
+
+def check_model():
+    # print(model.model)               # 查看整个结构
+    print(len(model.model.model))
+    print(model.model.model[-1])     # 查看 Detect 层
+    # print(model.model.yaml)          # 查看配置 yaml 内容
+    # print(model.model.names)         # 类别名称
+
 # === 主程序 ===
 if __name__ == "__main__":
-    print("hello")
-    example()
+    # print("hello")
+    # example()
+    check_model()
 
