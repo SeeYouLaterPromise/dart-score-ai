@@ -15,6 +15,7 @@ weight_path = PROJECT_ROOT / "model" / "yolov5s.pt"
 data_path = PROJECT_ROOT / "config" / "yolo_data.yaml"
 project_path = PROJECT_ROOT / "runs_dart"
 hyp_path = PROJECT_ROOT / "config/dart_hyp.yaml"
+cfg_path = PROJECT_ROOT / "config" / "yolov5s_dart.yaml"
 
 def train_yolo5(log_name="yolov5_hyp"):
     train.run(
@@ -24,6 +25,7 @@ def train_yolo5(log_name="yolov5_hyp"):
         data=str(data_path),
         weights=str(weight_path),
         hyp=hyp_path,
+        cfg=cfg_path,
         project=str(project_path),
         name=log_name
     )
@@ -39,6 +41,7 @@ def train_yolo8(log_name):
         data=str(data_path),
         weights=str(weight_path),
         hyp=hyp_path,
+        cfg=cfg_path,
         project=str(project_path),
         name=log_name
     )
