@@ -12,6 +12,7 @@ model/yolov5/.git/
 # Python 全局缓存
 *.pyc
 __pycache__/
+*.cache
 
 # VSCode/PyCharm 配置文件
 .vscode/

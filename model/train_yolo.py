@@ -29,10 +29,8 @@ def train_yolo5(log_name="yolov5_digit"):
         project=str(project_path),
         name=log_name,
         freeze=list(range(10)),  # 更简洁
-        # cache=True  # ✅ 可选加速
-        augment=False,  # ✅ 禁用增强器
-        workers=0,  # ✅ 禁用多进程避免 memory error
-        cache=False,  # ✅ 减少 cache 占
+        cache=True  # ✅ 可选加速
+
     )
 
 def train_yolo8(log_name):
