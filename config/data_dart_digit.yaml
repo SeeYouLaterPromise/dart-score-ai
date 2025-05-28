@@ -1,0 +1,5 @@
+train: ../../data/darts_dataset/50
+val:
+nc: 8
+
+names: ['20', '5', '11', '8', '3', '17', '13', '6']

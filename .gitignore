@@ -1,5 +1,7 @@
 # 数据集不上传
-data/darts_dataset
+data/darts_dataset/800
+data/darts_dataset/darts_dataset.zip
+data/darts_dataset/labels.pkl
 data/yolo_dataset
 data/SVHN
 data/yolo_dataset_2

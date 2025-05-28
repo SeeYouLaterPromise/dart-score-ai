@@ -12,10 +12,10 @@ PROJECT_ROOT = FILE.parents[1]
 
 weight_path = PROJECT_ROOT / "model" / "yolov8s.pt"
 
-data_path = PROJECT_ROOT / "config" / "yolo_data_2.yaml"
-project_path = PROJECT_ROOT / "runs_svhn"
+data_path = PROJECT_ROOT / "config" / "data_svhn.yaml"
+project_path = PROJECT_ROOT / "runs_digit"
 hyp_path = PROJECT_ROOT / "config/dart_hyp.yaml"
-cfg_path = PROJECT_ROOT / "config" / "yolov5s_dart_2.yaml"
+cfg_path = PROJECT_ROOT / "config" / "yolov5s_svhn.yaml"
 
 # 初始化模型（可换成 yolov8m.pt/yolov8l.pt/yolov8x.pt）
 model = YOLO("yolov8s.pt")

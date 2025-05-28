@@ -2,7 +2,7 @@ import cv2
 from ultralytics import YOLO
 import os
 
-weights_path = 'runs_svhn/yolov8_svhn/weights/best.pt'
+weights_path = 'runs_digit/yolov8_svhn/weights/best.pt'
 image_dir = 'data/yolo_dataset/images/val'
 output_dir = 'model/svhn_results'
 conf_threshold = 0.25

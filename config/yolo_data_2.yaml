@@ -1,5 +1,0 @@
-train: ../../data/yolo_dataset_2/images/train
-val: ../../data/yolo_dataset_2/images/val
-
-nc: 10  # number of classes
-names: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']

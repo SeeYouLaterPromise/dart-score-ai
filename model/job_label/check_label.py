@@ -2,8 +2,8 @@ import cv2
 import os
 
 # ==== 参数设置 ====
-image_folder = "./data/darts_dataset/d1_02_04_2020"  # 图片和txt的所在目录
-txt_folder = "./model/job_label/labels/train/d1_02_04_2020"  # 标注文件所在目录
+image_folder = "../../data/darts_dataset/800/d1_02_04_2020"  # 图片和txt的所在目录
+txt_folder = "../../model/job_label/labels/train/d1_02_04_2020"  # 标注文件所在目录
 start_idx = 1182
 end_idx = 1230
 image_ext = ".JPG"   # 可改为 .png 等格式

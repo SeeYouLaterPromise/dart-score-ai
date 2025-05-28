@@ -91,7 +91,7 @@ cd model/yolov5
 pip install -r requirements.txt
 cd ..
 cd ..
-python model/yolov5/train.py --img 800 --batch 16 --epochs 100 --data config/yolo_data.yaml --weights model/yolov5s.pt --project runs_dart --name yolov5_first
+python model/yolov5/train.py --img 800 --batch 16 --epochs 100 --data config/data_dart.yaml --weights model/yolov5s.pt --project runs_dart --name yolov5_first
 ```
 
 🔍 YOLOv5 要求输入为固定大小（默认是 640×640），因为：
@@ -128,7 +128,7 @@ python model/yolov5/train.py --img 800 --batch 16 --epochs 100 --data config/yol
 yolo help
 
 # 训练
-yolo detect train model=yolov8s.pt data=config/yolo_data.yaml epochs=100 imgsz=640
+yolo detect train model=yolov8s.pt data=config/data_dart.yaml epochs=100 imgsz=640
 
 # 推理
 yolo detect predict model=runs/detect/train/weights/best.pt source=test.jpg
@@ -153,7 +153,7 @@ pip install -e .  # 开发模式安装，可调试源码
 ```bash
 yolo detect train \
   model=yolov8s.pt \
-  data=config/yolo_data.yaml \
+  data=config/data_dart.yaml \
   epochs=10 \
   imgsz=640 \
   batch=16 \

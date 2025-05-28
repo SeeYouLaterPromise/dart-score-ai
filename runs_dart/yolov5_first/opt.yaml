@@ -1,6 +1,6 @@
 weights: yolov5s.pt
 cfg: ''
-data: config/yolo_data.yaml
+data: config/data_dart.yaml
 hyp:
   lr0: 0.01
   lrf: 0.01
