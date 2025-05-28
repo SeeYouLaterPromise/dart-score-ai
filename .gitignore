@@ -20,4 +20,4 @@ __pycache__/
 **/.DS_Store
 
 ## 模型权重文件
-#*.pt
+*.pt
