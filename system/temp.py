@@ -31,4 +31,4 @@ def paste_patch_on_dartboard(dart_img_path, font_patch_path, save_path="patched_
     cv2.destroyAllWindows()
 
 # 调用示例
-paste_patch_on_dartboard("our.png", "result_labeled.jpg")
+paste_patch_on_dartboard("images/our.png", "images/result_labeled.jpg")
