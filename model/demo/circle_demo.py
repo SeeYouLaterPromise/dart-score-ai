@@ -31,7 +31,7 @@ def detect_outer_circle_strict(img):
 if __name__ == "__main__":
     standard_img_name = "result_labeled.jpg"
     environment_img_name = "predict_20250513_163734.png"
-    img_path = f"system/{environment_img_name}"
+    img_path = f"system/{standard_img_name}"
     angle_shit = 10
     rough_ratio = 0.75
 
