@@ -4,6 +4,7 @@ data/yolo_dataset
 data/SVHN
 data/yolo_dataset_2
 *.zip
+*.mp4
 
 # 避免再次误提交子仓库信息（如果 .git 没删干净）
 model/yolov5/.git/
