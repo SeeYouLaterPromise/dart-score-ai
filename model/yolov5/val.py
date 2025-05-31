@@ -322,7 +322,9 @@ def run(
     s = ("%22s" + "%11s" * 6) % ("Class", "Images", "Instances", "P", "R", "mAP50", "mAP50-95")
     tp, fp, p, r, f1, mp, mr, map50, ap50, map = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
     dt = Profile(device=device), Profile(device=device), Profile(device=device)  # profiling times
-    loss = torch.zeros(3, device=device)
+    # loss = torch.zeros(3, device=device)
+    loss = None  # 延迟初始化
+
     jdict, stats, ap, ap_class = [], [], [], []
     callbacks.run("on_val_start")
     pbar = tqdm(dataloader, desc=s, bar_format=TQDM_BAR_FORMAT)  # progress bar
@@ -342,7 +344,13 @@ def run(
 
         # Loss
         if compute_loss:
-            loss += compute_loss(train_out, targets)[1]  # box, obj, cls
+            # loss += compute_loss(train_out, targets)[1]  # box, obj, cls
+            _, loss_items = compute_loss(train_out, targets)
+
+            if loss is None:  # 第一次进来时建张量
+                loss = torch.zeros_like(loss_items)
+
+            loss = (loss * batch_i + loss_items) / (batch_i + 1)  # running mean
 
         # NMS
         targets[:, 2:] *= torch.tensor((width, height, width, height), device=device)  # to pixels

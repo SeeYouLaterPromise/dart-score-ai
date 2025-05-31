@@ -80,7 +80,7 @@ from utils.general import (
 )
 from utils.loggers import LOGGERS, Loggers
 from utils.loggers.comet.comet_utils import check_comet_resume
-from utils.loss import ComputeLoss
+# from utils.loss import ComputeLoss
 from utils.losses import ComputeLossFull
 from utils.metrics import fitness
 from utils.plots import plot_evolve
@@ -386,6 +386,8 @@ def train(hyp, opt, device, callbacks):
         if RANK in {-1, 0}:
             pbar = tqdm(pbar, total=nb, bar_format=TQDM_BAR_FORMAT)  # progress bar
         optimizer.zero_grad()
+
+
         for i, (imgs, targets, paths, _) in pbar:  # batch -------------------------------------------------------------
             callbacks.run("on_train_batch_start")
             ni = i + nb * epoch  # number integrated batches (since train start)
@@ -419,6 +421,10 @@ def train(hyp, opt, device, callbacks):
                 if opt.quad:
                     loss *= 4.0
 
+            # >>> add this guard <<<
+            if mloss.shape[0] != loss_items.shape[0]:
+                mloss = torch.zeros_like(loss_items)
+
             # Backward 反向传播
             scaler.scale(loss).backward()
 
@@ -438,7 +444,7 @@ def train(hyp, opt, device, callbacks):
                 mloss = (mloss * i + loss_items) / (i + 1)  # update mean losses
                 mem = f"{torch.cuda.memory_reserved() / 1e9 if torch.cuda.is_available() else 0:.3g}G"  # (GB)
                 pbar.set_description(
-                    ("%11s" * 2 + "%11.4g" * 5)
+                    ("%11s" * 2 + "%11.4g" * 7)
                     % (f"{epoch}/{epochs - 1}", mem, *mloss, targets.shape[0], imgs.shape[-1])
                 )
                 callbacks.run("on_train_batch_end", model, ni, imgs, targets, paths, list(mloss))

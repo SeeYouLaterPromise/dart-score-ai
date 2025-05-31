@@ -10,14 +10,14 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True' # solve: OMP: Error #15: Initializin
 FILE = Path(__file__).resolve()
 PROJECT_ROOT = FILE.parents[1]
 
-weight_path = PROJECT_ROOT / "runs_dart" / "yolov5_hyp" / "weights" / "best.pt"
+weight_path = "./yolov5s.pt"
 
-data_path = PROJECT_ROOT / "config" / "data_dart_digit.yaml"
-project_path = PROJECT_ROOT / "runs_digit"
+data_path = PROJECT_ROOT / "config" / "data_dart.yaml"
+project_path = PROJECT_ROOT / "runs_dart"
 hyp_path = PROJECT_ROOT / "config/dart_hyp.yaml"
-cfg_path = PROJECT_ROOT / "config" / "yolov5_dart_digit.yaml"
-
-def train_yolo5(log_name="yolov5_digit"):
+cfg_path = PROJECT_ROOT / "config" / "yolov5_dart.yaml"
+1
+def train_yolo5(log_name="yolov5_third"):
     train.run(
         img=640,
         batch=4,
@@ -28,9 +28,6 @@ def train_yolo5(log_name="yolov5_digit"):
         cfg=cfg_path,
         project=str(project_path),
         name=log_name,
-        freeze=list(range(10)),  # 更简洁
-        cache=True  # ✅ 可选加速
-
     )
 
 def train_yolo8(log_name):

@@ -16,28 +16,31 @@ def fill_missing_with_random(calib_xy_pred, has_pred):
 
 def extract_calib_centers(p, calib_cids=(0,1,2,3)):
     """
-    p : list[(B,na,h,w,5+nc)]  —— 训练态输出
-    返回:
-        calib_xy  (B,4,2)    # 永远可导
+    Returns
+    -------
+    calib_xy : (B,4,2)   # 归一化中心坐标，可导
+    has_pred : (B,4)     # bool，True 表示这一类确实有预测框
     """
     device = p[0].device
     B      = p[0].shape[0]
     nc     = p[0].shape[-1] - 5
 
-    # 拼所有预测到 (B,N,5+nc)
-    outs = torch.cat([pi.view(B, -1, 5+nc) for pi in p], dim=1)
-    obj  = outs[...,4].sigmoid()          # (B,N)
-    cls  = outs[...,5:].sigmoid()         # (B,N,nc)
-    score= obj.unsqueeze(-1) * cls        # (B,N,nc)
+    outs = torch.cat([pi.view(B, -1, 5+nc) for pi in p], 1)  # (B,N,5+nc)
+    obj  = outs[...,4].sigmoid()                             # (B,N)
+    cls  = outs[...,5:].sigmoid()                            # (B,N,nc)
+    score= obj.unsqueeze(-1) * cls                           # (B,N,nc)
+    cxcy = outs[...,:2].sigmoid() * 2 - 0.5                  # (B,N,2)
 
-    xy_raw = outs[...,:2].sigmoid()*2 - .5    # 未解码中心 (B,N,2)
-    B4xy = []
-    for cid in calib_cids:                    # 0~3
-        best = score[:,:,cid].argmax(1)       # (B,)
-        # 取分最高的 anchor，不设阈值 -> 始终有梯度
-        xy_c = xy_raw[torch.arange(B, device=device), best]  # (B,2)
-        B4xy.append(xy_c)
-    return torch.stack(B4xy, dim=1)           # (B,4,2)
+    calib = torch.zeros(B, 4, 2, device=device)
+    mask  = torch.zeros(B, 4,   dtype=torch.bool, device=device)
+
+    for j, cid in enumerate(calib_cids):
+        best = score[..., cid].argmax(1)   # (B,)
+        best_score = score[..., cid].amax(1)  # (B,)
+        mask[:, j] = best_score > 0          # 只要有分就算“有预测”
+        calib[:, j] = cxcy[torch.arange(B, device=device), best]
+
+    return calib, mask       # ← 恰好两个值
 
 
 

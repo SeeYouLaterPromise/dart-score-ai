@@ -1,6 +1,6 @@
 # losses_full.py
 import torch
-from losses import ComputeLoss
+from utils.loss import ComputeLoss
 from utils.struct_loss import struct_loss_no_nums, extract_calib_centers, fill_missing_with_random
 from utils.torch_utils import de_parallel
 import torch.nn.functional as F
@@ -8,10 +8,11 @@ import torch.nn.functional as F
 class ComputeLossFull(ComputeLoss):
     def __init__(self, model, autobalance=False):
         super().__init__(model, autobalance)
+        # self.model = model
         self.w_struct = model.hyp.get('struct', 4.0)
         self.w_mse    = model.hyp.get('mse',    2.0)
         self.calib_ids = (0,1,2,3)               # 4 calib classes
-        self.img_size  = de_parallel(model).img_size
+        # self.img_size  = de_parallel(model).img_size
 
     # ------------- 核心 -------------
     def __call__(self, p, targets, calib_gt=None):
@@ -25,7 +26,7 @@ class ComputeLossFull(ComputeLoss):
 
         # ② 从 p 抽 4 calib 中心
         calib_pred, has_pred = extract_calib_centers(
-                                p, self.img_size, self.calib_ids)
+                                p, self.calib_ids)
         calib_pred = fill_missing_with_random(calib_pred, has_pred)
 
         # ③ Struct loss
@@ -45,4 +46,9 @@ class ComputeLossFull(ComputeLoss):
                                 struct_loss.detach().unsqueeze(0),
                                 torch.as_tensor([mse_loss], 
                                 device=det_items.device)))
+
+        # ---------- 若处于 eval (val.py) 就裁成前 3 列 ----------
+        # if not self.model.training:  # model.eval() 状态
+        #     loss_items = loss_items[:3]
+
         return total, loss_items

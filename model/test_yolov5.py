@@ -26,8 +26,10 @@ from model.yolov5.utils.augmentations import letterbox
 from model.yolov5.utils.torch_utils import select_device
 
 # ========== 参数设置 ==========
-MODEL_PATH = PROJECT_ROOT / 'runs_digit' / 'yolov5_digit6' / 'weights' / 'best.pt'
-IMAGE_DIR = PROJECT_ROOT / 'data' / 'yolo_dataset' / 'images' / 'val'
+MODEL_PATH = PROJECT_ROOT / 'runs_dart' / 'yolov5_third' / 'weights' / 'best.pt'
+# IMAGE_DIR = PROJECT_ROOT / 'data' / 'darts_dataset' / '50' / 'images' / 'train'
+IMAGE_DIR = PROJECT_ROOT / "system" / "images"
+fmt = 'png '
 CONF_THRESHOLD = 0.25
 IOU_THRESHOLD = 0.45
 IMG_SIZE = 640
@@ -71,7 +73,7 @@ def visualize(image, results):
 
 # ========== 示例测试函数 ==========
 def example():
-    for img_path in sorted(IMAGE_DIR.glob("*.jpg")):
+    for img_path in sorted(IMAGE_DIR.glob(f"*.{fmt}")):
         print(f"📷 Processing: {img_path.name}")
         image = cv2.imread(str(img_path))
         results, img = predict_image(image)

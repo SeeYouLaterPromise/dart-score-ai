@@ -1,5 +1,6 @@
 train: ../../data/yolo_dataset/images/train
-val: ../../data/yolo_dataset/images/val
+val: ../../data/yolo_dataset/images/train
 
 nc: 5  # number of classes
 names: ['Board1', 'Board2', 'Board3', 'Board4', 'Dart']
+# test_small  yolo_dataset

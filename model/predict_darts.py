@@ -32,7 +32,7 @@ from model.yolov5.utils.augmentations import letterbox
 print(FILE.parents[0])
 print(FILE.parents[1])
 print(FILE.parents[2])
-MODEL_PATH = PROJECT_ROOT / 'runs_dart' / 'yolov5_hyp' / 'weights' / 'best.pt'
+MODEL_PATH = PROJECT_ROOT / 'runs_darts' / 'yolov5_third9' / 'weights' / 'best.pt'
 IMAGE_DIR = PROJECT_ROOT / 'data' / 'yolo_dataset' / 'images' / 'val'
 CONF_THRESHOLD = 0.4
 IMG_SIZE = 800
@@ -107,8 +107,8 @@ def example():
         image = cv2.imread(str(img_path))
         xy, img = predict_image(image)
 
-        cv2.imshow("original", img)
-        cv2.waitKey(0)
+        # cv2.imshow("original", img)
+        # cv2.waitKey(0)
 
         print("预测点坐标：")
         for i, pt in enumerate(xy):
@@ -144,6 +144,6 @@ def check_model():
 # === 主程序 ===
 if __name__ == "__main__":
     # print("hello")
-    # example()
-    check_model()
+    example()
+    # check_model()
 

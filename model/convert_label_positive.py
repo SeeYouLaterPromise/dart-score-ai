@@ -9,7 +9,7 @@ DATA_DIR = os.path.join("..", "data")
 # 参数设置
 pkl_path = os.path.join(DATA_DIR, "darts_dataset", "labels.pkl")
 image_root = os.path.join(DATA_DIR, "darts_dataset", "800")
-output_root = os.path.join(DATA_DIR, "yolo_dataset")
+output_root = os.path.join(DATA_DIR, "test_small")
 
 train_ratio = 0.8
 box_size = 0.05  # YOLO中目标边框大小（归一化宽高）
@@ -50,5 +50,8 @@ for idx, (i, row) in tqdm(enumerate(data), total=len(data)):
         for j, (x, y) in enumerate(row["xy"]):
             cls_id = j if j < 4 else 4  # 0~3 为参考点，4 为飞镖
             f.write(f"{cls_id} {x:.6f} {y:.6f} {box_size} {box_size}\n")
+
+    if idx == 5:
+        break
 
 print("\n✅ 标签转换完成，仅保留了坐标合法的样本。")
