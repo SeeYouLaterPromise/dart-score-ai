@@ -9,9 +9,9 @@ def confirm_label_directory(label_dir):
     return None
 
 
-def match_real_image_path(real_image_dir, line):
+def match_real_image_path(real_image_dir, dataset_name, line):
     image_name = line.strip().split('/')[-1]
-    image_path = Path(real_image_dir) / image_name
+    image_path = Path(real_image_dir) / dataset_name / image_name
     return image_path if image_path.exists() else None
 
 
@@ -54,7 +54,7 @@ def convert_and_split_yolo_datasets(
         labels_dir = labels_dir / "train" / dataset_name if dataset_name else "WrongDatasetName"
 
         with open(train_txt, 'r') as f:
-            image_paths = [match_real_image_path(line) for line in f.readlines() if line.strip()]
+            image_paths = [match_real_image_path(real_image_dir, dataset_name, line) for line in f.readlines() if line.strip()]
 
         for img_path_str in image_paths:
             img_path = Path(img_path_str)
@@ -97,15 +97,17 @@ def convert_and_split_yolo_datasets(
 
 if __name__ == "__main__":
     source_dirs = [
-        "datasets/cvat_export_1",
-        "datasets/cvat_export_2",
-        "datasets/cvat_export_3",
+        "../../job0",
+        "../../job50",
+        "../../job100",
+        "../../job150",
     ]
-    output_dir = "unified_yolo_dataset"
+    image_dir = "../../data/darts_dataset/800"
+    output_dir = "../../data/yolo_digit"
     convert_and_split_yolo_datasets(
         source_folders=source_dirs,
+        real_image_dir=image_dir,
         output_base=output_dir,
-        train_ratio=0.85,
-        num_classes=10,
+        train_ratio=0.8,
         category_names=["0", "1", "2", "3", "4", "5", "6", "7"]
     )

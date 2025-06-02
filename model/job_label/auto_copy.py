@@ -2,7 +2,7 @@ import os
 import shutil
 
 # 设置路径（你可以修改成自己的文件夹路径）
-base_dir = "./model/job_label/labels/train/d1_02_04_2020/"
+base_dir = "../../job100/labels/train/d1_02_04_2020/"
 source_file = 'IMG_1182.txt'
 start_index = 1183
 end_index = 1230  # 包含1230

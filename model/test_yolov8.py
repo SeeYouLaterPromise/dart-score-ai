@@ -2,14 +2,44 @@ import cv2
 from ultralytics import YOLO
 import os
 
-weights_path = 'runs_digit/yolov8_svhn/weights/best.pt'
-image_dir = 'data/yolo_dataset/images/val'
-output_dir = 'model/svhn_results'
+weights_path = '../runs_digit/yolov8_200/weights/best.pt'
+# image_dir = '../data/yolo_dataset/images/val'
+image_dir = "../system/images"
+output_dir = '../model/svhn_results'
 conf_threshold = 0.25
 save_result = False
-
 os.makedirs(output_dir, exist_ok=True)
 model = YOLO(weights_path)
+
+def predict_yolov8(img):
+    orig_h, orig_w = img.shape[:2]
+
+    # 推理
+    results = model.predict(source=img, conf=conf_threshold, save=False, verbose=False)
+    result = results[0] if len(results) != 0 else None
+    assert result is not None
+
+    img_pred = img.copy()
+    boxes = result.boxes
+    cls_names = result.names
+
+    for box in boxes:
+        # 获取边框与标签
+        x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
+        conf = box.conf[0].item()
+        cls_id = int(box.cls[0].item())
+        label = f'{cls_names[cls_id]} {conf:.2f}'
+
+        # 绘制边框与标签
+        cv2.rectangle(img_pred, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        cv2.putText(img_pred, label, (x1, y1 - 5),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+
+    # 放大显示（可调节）
+    img_pred = cv2.resize(img_pred, (800, 800))
+    return img_pred
+
+
 
 for image_name in os.listdir(image_dir):
     image_path = os.path.join(image_dir, image_name)
@@ -20,6 +50,7 @@ for image_name in os.listdir(image_dir):
     results = model.predict(source=img, conf=conf_threshold, save=False, verbose=False)
 
     for result in results:
+        print(f"here, {len(results)}")
         img_pred = img.copy()
         boxes = result.boxes
         cls_names = result.names
@@ -40,6 +71,7 @@ for image_name in os.listdir(image_dir):
         img_pred = cv2.resize(img_pred, (800, 800))
 
         while True:
+            # print("here, while true")
             cv2.imshow("Prediction", img_pred)
             key = cv2.waitKey(0) & 0xFF
 

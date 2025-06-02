@@ -1,0 +1,39 @@
+# 优化器参数
+lr0: 0.001
+lrf: 0.01
+momentum: 0.937
+weight_decay: 0.0005
+warmup_epochs: 5.0
+warmup_momentum: 0.8
+warmup_bias_lr: 0.1
+
+# 损失函数权重
+box: 0.05
+cls: 0.2
+cls_pw: 0.8
+obj: 1.0
+obj_pw: 1.0
+iou_t: 0.2
+anchor_t: 4.0
+fl_gamma: 0.0
+
+# 数据增强参数
+# 数据增强调整（更保守）
+hsv_h: 0.01         # 原0.015 → 减少色调扰动
+hsv_s: 0.5          # 原0.6 → 降低饱和度扰动
+hsv_v: 0.3          # 原0.4 → 减少亮度变化
+
+degrees: 0.0        # 原5.0 → 减小旋转角度（数字对旋转敏感）
+translate: 0.05    # 原0.05 → 减少平移幅度
+scale: 0.2          # 原0.3 → 缩小缩放范围
+shear: 0.0         # 变形对数字不友好
+perspective: 0.0005 # 原0.001 → 降低透视变形强度
+
+flipud: 0.0         # 保持禁用 这个是上下翻转
+fliplr: 0.0         # 保持禁用 这个是左右翻转
+
+mosaic: 0.5         # 原1.0 → 降低Mosaic概率至50% 拼接好像是
+mixup: 0.0          # 保持禁用
+copy_paste: 0.0     # 保持禁用
+
+

@@ -1,38 +1,36 @@
 # 优化器相关
-lr0: 0.005          # 初始学习率稍微低一点，更稳健
-lrf: 0.01
-momentum: 0.937
-weight_decay: 0.0005
-warmup_epochs: 3.0
-warmup_momentum: 0.8
-warmup_bias_lr: 0.1
+lr0: 0.001          # 进一步降低初始学习率
+lrf: 0.01           # 最终学习率为 0.001 * 0.01 = 0.00001
+momentum: 0.937     # 保持原值
+weight_decay: 0.0005 # 保持原值
+warmup_epochs: 5.0   # 延长预热周期
+warmup_momentum: 0.8 # 保持原值
+warmup_bias_lr: 0.1  # 保持原值
 
-# Loss 权重
-box: 0.05
-cls: 0.5
-cls_pw: 1.0
-obj: 1.0
-obj_pw: 1.0
-iou_t: 0.2
-anchor_t: 4.0
-fl_gamma: 0.0
+# Loss 权重（降低分类权重，平衡损失）
+box: 0.05           # 保持原值
+cls: 0.3            # 原0.5 → 降低分类损失权重
+cls_pw: 0.8         # 原1.0 → 减少分类损失敏感度
+obj: 1.0            # 保持原值
+obj_pw: 1.0         # 保持原值
+iou_t: 0.2          # 保持原值
+anchor_t: 4.0       # 保持原值
+fl_gamma: 0.0       # 保持原值
 
-# 数据增强部分
-hsv_h: 0.015        # 色调扰动（保持原值）
-hsv_s: 0.6          # 饱和度扰动（稍微减弱）
-hsv_v: 0.4          # 亮度扰动
+# 数据增强调整（更保守）
+hsv_h: 0.01         # 原0.015 → 减少色调扰动
+hsv_s: 0.5          # 原0.6 → 降低饱和度扰动
+hsv_v: 0.3          # 原0.4 → 减少亮度变化
 
-degrees: 5.0        # ✅ 增加轻微旋转，模拟拍摄倾斜
-translate: 0.05     # 小范围平移，模拟摄像机轻微抖动
-scale: 0.3          # 缩放略减弱，避免比例变化过大影响识别
-shear: 1.0          # 少量剪切扰动
-perspective: 0.001  # ✅ 增加轻微透视变形，适应角度不正拍摄
+degrees: 2.0        # 原5.0 → 减小旋转角度（数字对旋转敏感）
+translate: 0.03     # 原0.05 → 减少平移幅度
+scale: 0.2          # 原0.3 → 缩小缩放范围
+shear: 0.5          # 原1.0 → 减少剪切变形
+perspective: 0.0005 # 原0.001 → 降低透视变形强度
 
-flipud: 0.0         # 垂直翻转不现实，保持禁用
-fliplr: 0.5         # 水平翻转保留，适合飞镖对称性
+flipud: 0.0         # 保持禁用
+fliplr: 0.3         # 原0.5 → 减少水平翻转概率
 
-mosaic: 1.0         # 拼图增强保留
-mixup: 0.0          # 不使用混合图像，避免小目标模糊
-copy_paste: 0.0     # segmentation 不适用，禁用
-
-
+mosaic: 0.0         # 原1.0 → 降低Mosaic概率至50%
+mixup: 0.0          # 保持禁用
+copy_paste: 0.0     # 保持禁用
