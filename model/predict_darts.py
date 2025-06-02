@@ -4,6 +4,8 @@ import cv2
 import numpy as np
 from pathlib import Path
 
+print("here is predict_darts.py")
+
 import platform
 os_type = platform.system()
 print("Operating System:", os_type)
@@ -29,25 +31,26 @@ from model.yolov5.utils.general import non_max_suppression, scale_boxes
 from model.yolov5.utils.augmentations import letterbox
 
 # === 参数配置 ===
-print(FILE.parents[0])
-print(FILE.parents[1])
-print(FILE.parents[2])
-MODEL_PATH = PROJECT_ROOT / 'runs_darts' / 'yolov5_third9' / 'weights' / 'best.pt'
+# print(FILE.parents[0])
+# print(FILE.parents[1])
+# print(FILE.parents[2])
+MODEL_PATH = PROJECT_ROOT / 'runs_digit' /  'weights' / 'best.pt'
 IMAGE_DIR = PROJECT_ROOT / 'data' / 'yolo_dataset' / 'images' / 'val'
 CONF_THRESHOLD = 0.4
 IMG_SIZE = 800
-# 这样传给 DetectMultiBackend(..., device=DEVICE) 的就是 torch.device('cuda') 或 torch.device('cpu') ✅
-DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # === 加载模型 ===
 model = DetectMultiBackend(str(MODEL_PATH), device=DEVICE)
 stride, names, pt = model.stride, model.names, model.pt
 model.warmup(imgsz=(1, 3, IMG_SIZE, IMG_SIZE))  # 预热模型
+# 这样传给 DetectMultiBackend(..., device=DEVICE) 的就是 torch.device('cuda') 或 torch.device('cpu') ✅
 
 # === 图像推理函数 ===
 def predict_image(image):
     img0 = image.copy()
     img = letterbox(img0, new_shape=IMG_SIZE, stride=stride)[0]
+
     # cv2.imshow("resized", img)
     img = img.transpose((2, 0, 1))[::-1]  # BGR to RGB, HWC to CHW
     img = np.ascontiguousarray(img)
@@ -135,9 +138,10 @@ def example_pic(img_path):
     cv2.waitKey(0)
 
 def check_model():
+    pass
     # print(model.model)               # 查看整个结构
-    print(len(model.model.model))
-    print(model.model.model[-1])     # 查看 Detect 层
+    # print(len(model.model.model))
+    # print(model.model.model[-1])     # 查看 Detect 层
     # print(model.model.yaml)          # 查看配置 yaml 内容
     # print(model.model.names)         # 类别名称
 

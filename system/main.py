@@ -8,7 +8,7 @@ from model.predict_darts import predict_image, visualize
 from realtime_infer import paste_patch_on_dartboard
 
 THIS_FOLDER_DIR = os.path.abspath(os.path.dirname(__file__))
-img_source = cv2.imread(os.path.abspath(os.path.join(THIS_FOLDER_DIR, "result_labeled.jpg"))) 
+# img_source = cv2.imread(os.path.abspath(os.path.join(THIS_FOLDER_DIR, "result_labeled.jpg"))) 
 
 # ========== 全局状态 ==========
 frame = None                    # 当前帧图像
@@ -120,11 +120,21 @@ def run_camera():
 
             try:
                 # crop = paste_patch_on_dartboard(crop.copy())
-                crop = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-                crop = cv2.merge([crop, crop, crop])
+                # crop = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+                # crop = cv2.merge([crop, crop, crop])
+                
                 xy, processed_img = predict_image(crop.copy())
                 print("📍 预测坐标：", xy)
                 vis = visualize(processed_img.copy(), xy)
+
+                # results, img = predict_image(crop.copy())
+
+                # print("🔍 Results:")
+                # for box, label, _ in results:
+                #     print(f"  - {label} at {box}")
+
+                # vis = visualize(img.copy(), results)
+
                 cv2.imshow("Result", vis)
             except Exception as e:
                 print("❌ 预测失败：", e)

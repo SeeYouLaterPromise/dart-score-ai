@@ -11,7 +11,7 @@ from model.predict_darts import predict_image, visualize
 
 THIS_FOLDER_DIR = os.path.abspath(os.path.dirname(__file__))
 
-img_source = cv2.imread(os.path.abspath(os.path.join(THIS_FOLDER_DIR, "result_labeled.jpg")))  # 数据集中有“BLADE”字体的图
+img_source = cv2.imread(os.path.abspath(os.path.join(THIS_FOLDER_DIR, "images", "result_labeled.jpg")))  # 数据集中有“BLADE”字体的图
 
 def paste_patch_on_dartboard(img_target):
     # 读取图像
