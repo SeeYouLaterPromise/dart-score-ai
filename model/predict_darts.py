@@ -3,6 +3,7 @@ import torch
 import cv2
 import numpy as np
 from pathlib import Path
+from ultralytics import YOLO
 
 print("here is predict_darts.py")
 

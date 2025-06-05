@@ -5,7 +5,8 @@ import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from model.predict_darts import predict_image, visualize
+# from model.test_yolov8 import predict_image
+from model.predict_darts_v8 import visualize, predict_image
 
 def calculate_dart_scores(calibration_points, dart_points):
     """
@@ -147,6 +148,16 @@ def label_dart_scores(image, dart_points, scores):
         cv2.putText(labeled_image, label, text_position, font, font_scale, color, thickness)
 
     return labeled_image
+
+def score_pipeline(image):
+    xy, img = predict_image(image)
+    vis = visualize(img.copy(), xy)
+    calibration = xy[:4]
+    darts = xy[4:]
+    scores, total = calculate_dart_scores(calibration, darts)
+    labeled_image = label_dart_scores(vis, darts, scores)
+    return labeled_image
+    
 
 def example(img_path):
     # print(f"📷 处理图像：{img_path.name}")

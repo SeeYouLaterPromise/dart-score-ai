@@ -1,18 +1,43 @@
 import cv2
 from ultralytics import YOLO
 import os
+import numpy as np
+from pathlib import Path
+import sys
 
-weights_path = '../runs_digit/yolov8_200/weights/best.pt'
+# === 设置路径 ===
+FILE = Path(__file__).resolve()
+PROJECT_ROOT = FILE.parents[1]
+sys.path.append(str(PROJECT_ROOT))
+YOLOV5_ROOT = PROJECT_ROOT / 'model' / 'yolov5'
+sys.path.insert(0, str(YOLOV5_ROOT))  # 把 yolov5 路径放在最前面！
+# ✅ 使用 yolov5.xxx 模块路径
+from model.yolov5.utils.general import non_max_suppression, scale_boxes
+from model.yolov5.utils.augmentations import letterbox
+
+weights_path = 'runs_dart/yolov11n_first/weights/best.pt'
 # image_dir = '../data/yolo_dataset/images/val'
-image_dir = "../system/images"
-output_dir = '../model/svhn_results'
+image_dir = "system/data"
+# output_dir = 'model/svhn_results'
 conf_threshold = 0.25
 save_result = False
-os.makedirs(output_dir, exist_ok=True)
+# os.makedirs(output_dir, exist_ok=True)
 model = YOLO(weights_path)
 
-def predict_yolov8(img):
-    orig_h, orig_w = img.shape[:2]
+def predict_yolov8(image):
+    # orig_h, orig_w = img.shape[:2]
+
+    # img0 = image.copy()
+    img = image.copy()
+    # img = letterbox(img0, new_shape=IMG_SIZE, stride=stride)[0]
+
+    # # cv2.imshow("resized", img)
+    # img = img.transpose((2, 0, 1))[::-1]  # BGR to RGB, HWC to CHW
+    # img = np.ascontiguousarray(img)
+
+    # img = torch.from_numpy(img).to(DEVICE).float()
+    # img /= 255.0
+    # img = img.unsqueeze(0)
 
     # 推理
     results = model.predict(source=img, conf=conf_threshold, save=False, verbose=False)
@@ -37,57 +62,79 @@ def predict_yolov8(img):
 
     # 放大显示（可调节）
     img_pred = cv2.resize(img_pred, (800, 800))
-    return img_pred
+    return img, results, img_pred
 
 
+def get_points(pred, img0):
+    xy = []
+    for det in pred:  # 遍历每一张图
+        if len(det):
+            det[:, :4] = scale_boxes(img0.shape[2:], det[:, :4], img0.shape).round()
+            h, w = img0.shape[:2]
+            board_pts = det[det[:, 5] < 4].cpu().numpy()
+            dart_pts = det[det[:, 5] == 4].cpu().numpy()
 
-for image_name in os.listdir(image_dir):
-    image_path = os.path.join(image_dir, image_name)
-    img = cv2.imread(image_path)
-    orig_h, orig_w = img.shape[:2]
+            board_pts = board_pts[np.argsort(board_pts[:, 5])]  # 按 class 排序
+            for box in np.vstack((board_pts, dart_pts)):
+                x_center = (box[0] + box[2]) / 2 / w
+                y_center = (box[1] + box[3]) / 2 / h
+                xy.append([x_center, y_center])
+    return xy, img0
 
-    # 推理
-    results = model.predict(source=img, conf=conf_threshold, save=False, verbose=False)
 
-    for result in results:
-        print(f"here, {len(results)}")
-        img_pred = img.copy()
-        boxes = result.boxes
-        cls_names = result.names
+def predict_image(image):
+    img0, results, _ = predict_yolov8(image)
+    return get_points(results, img0)
 
-        for box in boxes:
-            # 获取边框与标签
-            x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
-            conf = box.conf[0].item()
-            cls_id = int(box.cls[0].item())
-            label = f'{cls_names[cls_id]} {conf:.2f}'
 
-            # 绘制边框与标签
-            cv2.rectangle(img_pred, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.putText(img_pred, label, (x1, y1 - 5),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+if __name__ == "__main__":
+    for image_name in os.listdir(image_dir):
+        image_path = os.path.join(image_dir, image_name)
+        img = cv2.imread(image_path)
+        orig_h, orig_w = img.shape[:2]
 
-        # 放大显示（可调节）
-        img_pred = cv2.resize(img_pred, (800, 800))
+        # 推理
+        results = model.predict(source=img, conf=conf_threshold, save=False, verbose=False)
 
-        while True:
-            # print("here, while true")
-            cv2.imshow("Prediction", img_pred)
-            key = cv2.waitKey(0) & 0xFF
+        for result in results:
+            print(f"here, {len(results)}")
+            img_pred = img.copy()
+            boxes = result.boxes
+            cls_names = result.names
 
-            if key == ord("q"):
-                print("🛑 程序已退出")
-                cv2.destroyAllWindows()
-                exit(0)
+            for box in boxes:
+                # 获取边框与标签
+                x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
+                conf = box.conf[0].item()
+                cls_id = int(box.cls[0].item())
+                label = f'{cls_names[cls_id]} {conf:.2f}'
 
-            elif key == ord("s"):
-                save_path = os.path.join(output_dir, image_name)
-                cv2.imwrite(save_path, img_pred)
-                print(f"💾 已保存预测结果图：{image_name}")
-                break
+                # 绘制边框与标签
+                cv2.rectangle(img_pred, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                cv2.putText(img_pred, label, (x1, y1 - 5),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
-            elif key == ord("l"):
-                break
+            # 放大显示（可调节）
+            img_pred = cv2.resize(img_pred, (800, 800))
 
-            else:
-                print("⚠️ 按下无效按键，请按 'q' 退出，'s' 保存，或 'l' 查看下一张")
+            while True:
+                # print("here, while true")
+                cv2.imshow("Prediction", img_pred)
+                key = cv2.waitKey(0) & 0xFF
+
+                if key == ord("q"):
+                    print("🛑 程序已退出")
+                    cv2.destroyAllWindows()
+                    exit(0)
+
+                elif key == ord("s"):
+                    # save_path = os.path.join(output_dir, image_name)
+                    # cv2.imwrite(save_path, img_pred)
+                    # print(f"💾 已保存预测结果图：{image_name}")
+                    break
+
+                elif key == ord("l"):
+                    break
+
+                else:
+                    print("⚠️ 按下无效按键，请按 'q' 退出，'s' 保存，或 'l' 查看下一张")

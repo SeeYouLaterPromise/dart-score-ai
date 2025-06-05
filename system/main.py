@@ -4,9 +4,11 @@ import time
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from model.predict_darts import predict_image, visualize
-from realtime_infer import paste_patch_on_dartboard
-from model.test_yolov8 import predict_yolov8
+# from model.predict_darts import predict_image, visualize
+# from realtime_infer import paste_patch_on_dartboard
+# from model.test_yolov8 import predict_image
+# from model.predict_darts import visualize
+from geometry.dart_scoring import score_pipeline
 
 THIS_FOLDER_DIR = os.path.abspath(os.path.dirname(__file__))
 # img_source = cv2.imread(os.path.abspath(os.path.join(THIS_FOLDER_DIR, "result_labeled.jpg"))) 
@@ -121,24 +123,11 @@ def run_camera():
 
             try:
                 # yolov8 prediction
-                vis = predict_yolov8(crop.copy())
+                # xy, img = predict_image(crop.copy())
 
 
-                # crop = paste_patch_on_dartboard(crop.copy())
-                # crop = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-                # crop = cv2.merge([crop, crop, crop])
-                
-                # xy, processed_img = predict_image(crop.copy())
-                # print("📍 预测坐标：", xy)
-                # vis = visualize(processed_img.copy(), xy)
-
-                # results, img = predict_image(crop.copy())
-
-                # print("🔍 Results:")
-                # for box, label, _ in results:
-                #     print(f"  - {label} at {box}")
-
-                # vis = visualize(img.copy(), results)
+                # pipeline
+                vis = score_pipeline(crop.copy())
 
                 cv2.imshow("Result", vis)
             except Exception as e:
