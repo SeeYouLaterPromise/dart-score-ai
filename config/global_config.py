@@ -1,9 +1,33 @@
 import yaml
+import sys
+from pathlib import Path
+import os
 
-def load_settings(path='setting.yaml'):
+# === 设置路径 ===
+FILE = Path(__file__).resolve()
+PROJECT_ROOT = FILE.parents[1]
+sys.path.append(str(PROJECT_ROOT))
+
+
+def load_settings(path='config/global_setting.yaml'):
+    path = os.path.abspath(os.path.join(PROJECT_ROOT, path))
     with open(path, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
     return config
+
+config = load_settings()
+
+def get_model_weight_path():
+    return config['model']['weights']
+
+def get_input_size():
+    return config['model']['input_size']
+
+def get_threshold():
+    return config['model']['conf_threshold']
+
+def get_draw_radius():
+    return config['draw']['radius']
 
 if __name__ == "__main__":
     # Load settings
